@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regre Calc Calculadora de Regresion Polinomica</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>📊 RegreCalc</h1>
+        <p class="subtitle">Calculadora Interactiva de Regresión Polinómica</p>
+        <p class="description">
+            Haz clic en la gráfica para agregar puntos y observa cómo se ajusta 
+            la curva usando álgebra lineal y el método de mínimos cuadrados.
+        </p>
+    </header>
+    <div class="container">
+
+        <div class="left-panel">
+          
+            <div id="grafica" class="graph-continer"></div>
+            <div class="graph-intructions">
+                <p>💡 <strong>Instrucciones:</strong></p>
+                <ul>
+                    <li>Haz click en la grafica para agregar puntos</li>
+                    <li>Usa los controles para cambiar el grado del polinomio</li>
+                    <li>Observa como cambia la curva de ajuste</li>
+                </ul>
+            </div>
+        </div>
+    
+
+        <div class="rigth-panel">
+
+            <div class="card">
+                <h2>🎛️ Controles</h2>
+                <div class="control-group">
+                    <label for="grado">Grado del Polinomio:</label>
+                    <input type="number" id="grado" min="1" max="10" value="2">
+                    <span class="hint">
+                        (1=lineal, 2=parabólico, 3=cúbico...)
+                    </span>
+                </div>
+
+                <div class="button-gropu">
+                    <button id="btn-calcular" class="btn-primary">Calcular Regresion</button>
+                    <button id="btn-limpiar" class="btn-secondary">Limpiar Todo</button>
+                </div>
+            </div>
+        
+            <div class="card">
+                <h2>📍 Puntos Ingresados</h2>
+                <div id="lista-puntos" class="points-list">
+                    <p class="empy-message">
+                    No hay puntos aún. Haz clic en la gráfica para agregar.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📈 Resultados</h2>
+                <div id="resultados" class="results"></div>
+                    <p class="empy-message">
+                        Agrega al menos 2 puntos y calcula la regresión.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="collapsible" id="toggle-math">
+                    🧮 Detalles Matemáticos 
+                    <span class="toggle-icon">▼</span>
+                </h2>
+                <div id="detalles-math" class="math-details-hidden">
+                    <p class="empy-message">
+                        Calcula una regresión para ver los detalles.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔮 Predicción</h2>
+                <div class="prediction-controls">
+                    <label for="input-x">Calcular Y para X =</label>
+                    <input type="number" id="input-x" step="0.1" placeholder="Ej: 5">
+                    <button id="btn-predecir" class="btn-primary">Predecir</button>
+                </div>
+                <div id="resultado-prediccion" class="prediction-result"></div>
+            </div>
+        </div>
+    </div>
+    <script src="math.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
