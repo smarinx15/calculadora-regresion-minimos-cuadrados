@@ -7,7 +7,7 @@ function construirMatrizX (puntos, grado) {
         const x = puntos[i].x; 
 
         for (let j = 0; j <= grado; j++) {
-        filas.push(Math.pow(X, j));
+        filas.push(Math.pow(x, j));
         }
 
         X.push(filas);
@@ -26,9 +26,9 @@ function construirVectorY (puntos) {
     return vectorY;
 }
 
-function calcularCoeficiente (puntos, grado) {
+function calcularCoeficientes (puntos, grado) {
     if (puntos.length < grado + 1) {
-        throw new Error('Necesitas al menos ${grado + 1} puntos para un polinomio de grado ${grado}');
+        throw new Error(`Necesitas al menos ${grado + 1} puntos para un polinomio de grado ${grado}`);
     }
 
     const X = construirMatrizX(puntos, grado);
@@ -127,7 +127,7 @@ function formatearEcuacion (coeficientes) {
 
     for (let i = 0; i < coeficientes.length; i++) {
         const coef = coeficientes[i];
-        const coefRedondeado = coef.toFidex(4);
+        const coefRedondeado = coef.toFixed(4);
 
         if (i === 0) {
         ecuacion += coefRedondeado;

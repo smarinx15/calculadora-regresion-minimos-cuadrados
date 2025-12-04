@@ -1,97 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regre Calc Calculadora de Regresion Polinomica</title>
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <title>RegreCalc - Calculadora de Regresión Polinómica</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 </head>
 <body>
     <header>
         <h1>📊 RegreCalc</h1>
         <p class="subtitle">Calculadora Interactiva de Regresión Polinómica</p>
         <p class="description">
-            Haz clic en la gráfica para agregar puntos y observa cómo se ajusta 
-            la curva usando álgebra lineal y el método de mínimos cuadrados.
+            Herramienta educativa para visualizar y comprender el <strong>método de mínimos cuadrados</strong> 
+            aplicado a regresión polinómica mediante <strong>álgebra lineal</strong>.
         </p>
     </header>
-    <div class="container">
 
+    <div class="container">
+        <!-- PANEL IZQUIERDO: GRÁFICA -->
         <div class="left-panel">
-          
-            <div id="grafica" class="graph-continer"></div>
-            <div class="graph-intructions">
-                <p>💡 <strong>Instrucciones:</strong></p>
+            <div id="grafica" class="graph-container"></div>
+            
+            <div class="graph-instructions">
+                <p>💡 <strong>Cómo usar la aplicación:</strong></p>
                 <ul>
-                    <li>Haz click en la grafica para agregar puntos</li>
-                    <li>Usa los controles para cambiar el grado del polinomio</li>
-                    <li>Observa como cambia la curva de ajuste</li>
+                    <li><strong>Agregar puntos:</strong> Haz clic en la gráfica o usa los campos de la derecha</li>
+                    <li><strong>Cambiar grado:</strong> Selecciona el grado del polinomio (1=línea, 2=parábola, 3=cúbica...)</li>
+                    <li><strong>Calcular:</strong> El algoritmo encuentra la curva que mejor se ajusta a tus puntos</li>
+                    <li><strong>Explorar:</strong> Observa todas las matrices y operaciones del proceso matemático</li>
                 </ul>
             </div>
         </div>
-    
 
-        <div class="rigth-panel">
-
+        <!-- PANEL DERECHO: CONTROLES Y RESULTADOS -->
+        <div class="right-panel">
+            <!-- CARD 1: CONTROLES -->
             <div class="card">
-                <h2>🎛️ Controles</h2>
-                <div class="control-group">
-                    <label for="grado">Grado del Polinomio:</label>
-                    <input type="number" id="grado" min="1" max="10" value="2">
-                    <span class="hint">
-                        (1=lineal, 2=parabólico, 3=cúbico...)
-                    </span>
+                <h2>🎛️ Configuración del Modelo</h2>
+                
+                <div class="explicacion">
+                    <strong>¿Qué es el grado del polinomio?</strong><br>
+                    Es la potencia más alta de X en la ecuación. Grado 1 = línea recta, 
+                    Grado 2 = parábola, Grado 3 = cúbica. A mayor grado, mayor flexibilidad 
+                    de la curva, pero cuidado con el sobreajuste.
                 </div>
 
-                <div class="button-gropu">
-                    <button id="btn-calcular" class="btn-primary">Calcular Regresion</button>
+                <div class="control-group">
+                    <label for="input-grado">Grado del Polinomio:</label>
+                    <input type="number" id="input-grado" min="1" max="10" value="2">
+                    <span class="hint">(Recomendado: 1-4 para la mayoría de casos)</span>
+                </div>
+
+                <div class="button-group">
+                    <button id="btn-calcular" class="btn-primary">Calcular Regresión</button>
                     <button id="btn-limpiar" class="btn-secondary">Limpiar Todo</button>
                 </div>
             </div>
-        
+
+            <!-- CARD 2: AGREGAR PUNTOS -->
+            <div class="card">
+                <h2>➕ Agregar Datos</h2>
+                
+                <div class="explicacion">
+                    <strong>Ingresa las coordenadas (X, Y)</strong> de tus datos. 
+                    Necesitas al menos <strong>grado + 1</strong> puntos. Por ejemplo, 
+                    para una parábola (grado 2) necesitas mínimo 3 puntos.
+                </div>
+
+                <div class="add-point-controls">
+                    <div class="input-group">
+                        <label for="input-x-manual">Coordenada X:</label>
+                        <input type="number" id="input-x-manual" step="0.1" placeholder="Ej: 1.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="input-y-manual">Coordenada Y:</label>
+                        <input type="number" id="input-y-manual" step="0.1" placeholder="Ej: 3.2">
+                    </div>
+                </div>
+                <button id="btn-agregar-punto" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                    ✅ Agregar Punto
+                </button>
+            </div>
+
+            <!-- CARD 3: PUNTOS INGRESADOS -->
             <div class="card">
                 <h2>📍 Puntos Ingresados</h2>
+                
+                <div class="explicacion">
+                    Estos son los <strong>datos observados</strong> que usaremos para encontrar 
+                    la función que mejor los aproxima.
+                </div>
+
                 <div id="lista-puntos" class="points-list">
-                    <p class="empy-message">
-                    No hay puntos aún. Haz clic en la gráfica para agregar.
+                    <p class="empty-message">
+                        No hay puntos aún. Agrégalos arriba o haz clic en la gráfica.
                     </p>
                 </div>
             </div>
 
+            <!-- CARD 4: RESULTADOS -->
             <div class="card">
-                <h2>📈 Resultados</h2>
-                <div id="resultados" class="results"></div>
-                    <p class="empy-message">
-                        Agrega al menos 2 puntos y calcula la regresión.
+                <h2>📈 Resultados del Ajuste</h2>
+                
+                <div class="explicacion">
+                    <strong>Ecuación:</strong> Es la función matemática que mejor representa tus datos.<br>
+                    <strong>Coeficientes (β):</strong> Son los valores calculados con la fórmula β = (XᵀX)⁻¹Xᵀy<br>
+                    <strong>Error (MSE):</strong> Promedio de los errores al cuadrado. Más cercano a 0 = mejor ajuste.
+                </div>
+
+                <div id="resultados" class="results">
+                    <p class="empty-message">
+                        Agrega puntos y presiona "Calcular Regresión"
                     </p>
                 </div>
             </div>
 
+            <!-- CARD 5: DETALLES MATEMÁTICOS -->
             <div class="card">
-                <h2 class="collapsible" id="toggle-math">
-                    🧮 Detalles Matemáticos 
+                <h2 class="collapsible" id="toggle-detalles">
+                    🧮 Proceso Matemático Completo
                     <span class="toggle-icon">▼</span>
                 </h2>
-                <div id="detalles-math" class="math-details-hidden">
-                    <p class="empy-message">
-                        Calcula una regresión para ver los detalles.
-                    </p>
+                
+                <div id="detalles-contenido" class="oculto">
+                    <div class="explicacion">
+                        Aquí puedes ver <strong>todas las operaciones</strong> del algoritmo de mínimos cuadrados:
+                        <br><br>
+                        <strong>1. Matriz X:</strong> Contiene [1, x, x², x³...] para cada punto<br>
+                        <strong>2. Xᵀ:</strong> Transpuesta de X (intercambia filas por columnas)<br>
+                        <strong>3. XᵀX:</strong> Producto matricial de Xᵀ por X<br>
+                        <strong>4. (XᵀX)⁻¹:</strong> Inversa de XᵀX (operación clave)<br>
+                        <strong>5. Xᵀy:</strong> Producto de Xᵀ por el vector de valores Y<br>
+                        <strong>6. β:</strong> Coeficientes finales = (XᵀX)⁻¹ · Xᵀy
+                    </div>
+                    
+                    <div id="detalles-matrices" class="math-details">
+                        <p class="empty-message">Calcula una regresión para ver los detalles</p>
+                    </div>
                 </div>
             </div>
 
+            <!-- CARD 6: PREDICCIÓN -->
             <div class="card">
-                <h2>🔮 Predicción</h2>
+                <h2>🔮 Hacer Predicciones</h2>
+                
+                <div class="explicacion">
+                    Una vez calculada la regresión, puedes <strong>predecir el valor de Y</strong> 
+                    para cualquier valor de X usando la ecuación encontrada.
+                </div>
+
                 <div class="prediction-controls">
-                    <label for="input-x">Calcular Y para X =</label>
-                    <input type="number" id="input-x" step="0.1" placeholder="Ej: 5">
+                    <div>
+                        <label for="input-prediccion">Valor de X para predecir:</label>
+                        <input type="number" id="input-prediccion" step="0.1" placeholder="Ej: 5.0">
+                    </div>
                     <button id="btn-predecir" class="btn-primary">Predecir</button>
                 </div>
                 <div id="resultado-prediccion" class="prediction-result"></div>
             </div>
         </div>
     </div>
+
     <script src="math.js"></script>
     <script src="app.js"></script>
 </body>
