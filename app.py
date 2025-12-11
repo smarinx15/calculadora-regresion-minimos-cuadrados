@@ -5,24 +5,35 @@ import matplotlib.pyplot as plt
 def ingresar_datos(x_data,y_data,grados):
     x_data = []
     y_data = []
-    print("Ingresa los puntos de cordenada (x,y)")
+    print("Ingresa los puntos de coordenada (x,y)")
+    print("\nPara ajustar el grado de un polinomio parabolico deben haber 3 puntos, es decir, ingresar 3 valores x y 3 para y\ny para un polinomio de grado parabolico requiere 2 puntos\n")
     while True:
         try:
-            x = input("Digite el valor x (o 'fin' para salir): ")
-            if x == "fin":
-                grados = int(input("¿Qué grado de polinomio deseas ajustar? (1=lineal, 2=parabólico, etc.): "))
+            grados = int(input("¿Qué grado de polinomio deseas ajustar? (1=lineal, 2=parabólico): "))
+            if grados == 1:
+                print("Ingresa dos puntos de coordenadas (x,y)")
+                for i in range(1,3):
+                    print("puntos ",i)
+                    x = int(input("Digite el valor x : "))
+                    y = int(input("Digite el valor y: "))
+                    x_data.append(x)
+                    y_data.append(y)
+                break
+            elif grados == 2:
+                print("Ingresa 3 puntos de coordenadas (x,y)")
+                for i in range(1,4):
+                    print("puntos ",i)
+                    x = int(input("Digite el valor x : "))
+                    y = int(input("Digite el valor y: "))
+                    x_data.append(x)
+                    y_data.append(y)
                 break
             else:
-                x = int(x)
-                x_data.append(x)
-                y = input("Digite el valor y: ")
-                y = int(y)
-                y_data.append(y)
+                print("Grado no valido")
                 continue
         except ValueError:
             print("Digite una opcion valida")
             continue
-    
     return np.array(x_data), np.array(y_data), grados
 
 def evaluar_polinomios(x, coeficientes):
@@ -73,16 +84,36 @@ def calcular_regresion(x_data, y_data, grados):
     n = len(x_data)
     columnas = [np.ones(n)]
 
+    print("\n=== Datos ingresados ===")
+    print("x_data =", x_data)
+    print("y_data =", y_data)
+
     for i in range (1,grados + 1):
+        print(f"\nCreando columna para x^{i}:")
+        print(x_data ** i)
         columnas.append(x_data ** i)
 
     x = np.column_stack(columnas)
+    print("\n=== Matriz X (Diseño) ===")
+    print(x)
     y = y_data.reshape(-1,1)
+    print("\n=== Vector y ===")
+    print(y)
     x_t = x.T
+    print("\n=== Matriz X transpuesta ===")
+    print(x_t)
     xt_t = x_t @ x
-    inversa_x = np.linalg.inv(xt_t) 
+    print("\n=== Matriz Xᵀ * X ===")
+    print(xt_t)
+    inversa_x = np.linalg.inv(xt_t)
+    print("\n=== Inversa de XᵀX ===")
+    print(inversa_x) 
     yt_t = x_t @ y
+    print("\n=== Matriz Xᵀ * y ===")
+    print(yt_t)
     coeficientes = inversa_x @ yt_t
+    print("\n=== Coeficientes resultantes ===")
+    print(coeficientes)
 
     print('\n===== Resultado de la regresion ===== ')
     print(f"Grados del polinomio: {grados} ")
@@ -125,13 +156,9 @@ def menu ():
 
         if opc == "1":
             x_data, y_data, grados = ingresar_datos(x_data, y_data,grados)
-        elif opc == "2":
+        elif opc == "2":    
             if len(x_data) == 0:
                 print("Primero debe ingresar datos")
-                continue
-            elif len(x_data) <= grados:
-                print(f"Error: Necesita al menos {grados + 1} puntos para un polinomio de grado {grados}")
-                print(f"Actualmente tiene {len(x_data)} puntos")
                 continue
             else:
                 calcular_regresion(x_data, y_data,grados)
